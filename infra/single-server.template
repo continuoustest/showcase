@@ -222,7 +222,7 @@
     "AWSRegionArch2AMI": {
       "us-east-1": {
         "PV64": "ami-1ccae774",
-        "HVM64": "ami-1ecae776",
+        "HVM64": "ami-8345b0ee",
         "HVMG2": "ami-8c6b40e4"
       },
       "us-west-2": {
@@ -449,31 +449,25 @@
               "",
               [
                 "#!/bin/bash -xe\n",
-                "yum install -y aws-cli php56 mysql55-server php56-mysqlnd\n",
-                "/etc/init.d/mysqld start\n",
-                "mkdir -p /var/log/training\n",
-                "mkdir -p /var/www/html/public\n",
-                "chown apache:apache /var/www/html/public\n",
-                "sed -i 's#DocumentRoot \"/var/www/html\"#DocumentRoot \"/var/www/html/public\"#g' /etc/httpd/conf/httpd.conf\n",
+                "mkdir -p /var/log/showcase\n",
+                "mkdir -p /var/www/public\n",
+                "chown www-data:www-data /var/www/public\n",
+                "sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/public#g' /etc/apache2/sites-available/000-default.conf\n",
                 "echo 'date.timezone=Europe/Paris' >> /etc/php.ini\n",
-                "/etc/init.d/httpd restart\n",
+                "service apache2 restart\n",
                 "# Setup application dependencies.\n",
-                "mkdir -p /usr/local/etc/skeleton",
+                "mkdir -p /usr/local/etc/showcase",
                 "\n",
-                "echo 'db.host=localhost' >> /usr/local/etc/skeleton/skeleton.tmp.ini",
+                "echo 'db.host=localhost' >> /usr/local/etc/showcase/showcase.tmp.ini",
                 "\n",
-                "echo 'db.name=training' >> /usr/local/etc/skeleton/skeleton.tmp.ini",
+                "echo 'db.name=training' >> /usr/local/etc/showcase/showcase.tmp.ini",
                 "\n",
-                "echo 'db.user=root' >> /usr/local/etc/skeleton/skeleton.tmp.ini",
+                "echo 'db.user=root' >> /usr/local/etc/showcase/showcase.tmp.ini",
                 "\n",
-                "echo 'db.password=' >> /usr/local/etc/skeleton/skeleton.tmp.ini",
+                "echo 'db.password=' >> /usr/local/etc/showcase/showcase.tmp.ini",
                 "\n",
-                "mv /usr/local/etc/skeleton/skeleton.tmp.ini /usr/local/etc/skeleton/skeleton.ini",
-                "\n",
-                "# Install the AWS CodeDeploy Agent.\n",
-                "cd /home/ec2-user/\n",
-                "aws s3 cp 's3://aws-codedeploy-us-east-1/latest/codedeploy-agent.noarch.rpm' .\n",
-                "yum -y install codedeploy-agent.noarch.rpm \n"
+                "mv /usr/local/etc/showcase/showcase.tmp.ini /usr/local/etc/showcase/showcase.ini",
+                "\n"
               ]
             ]
           }
